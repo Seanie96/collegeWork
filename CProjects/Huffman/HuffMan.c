@@ -34,6 +34,8 @@ HuffNode * make_huffman_tree(char * string, int size, int range) {
     size = make_compoundNode(level, size);
     sort(level, (size + 1));
   }
+
+
   return level[0];
 }
 
@@ -93,19 +95,27 @@ void printFrequency(HuffNode * node, int * code, int depth) {
     for(int i = 0; i < depth; i++) {
       node->code[i] = (char)(0x30 + code[i]);
     }
-    printf("character: %c, encoding:%s\n", node->character, node->code);
     node->code[depth] = '\0';
+    printf("character: %c, encoding:%s\n", node->character, node->code);
     code[depth - 1] = NULL;
   }
 }
 
 char * findCode(HuffNode * node, char character) {
-  if(node->left != NULL) {
-    return findCode(node->left, character);
-  } else if(node->right != NULL) {
-    return findCode(node->right, character);
-  } else {
+  printf("in here!\n");
+  if(node->character == character) {
+    printf("char:%c\n", node->character);
     return node->code;
+  } else  {
+    if(node->left != NULL) {
+      printf("in here1!\n");
+      return findCode(node->left, character);
+    }
+    printf("in here!\n");
+    if(node->right != NULL) {
+      printf("in here2!\n");
+      return findCode(node->right, character);
+    }
   }
 }
 
