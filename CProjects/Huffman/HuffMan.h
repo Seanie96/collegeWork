@@ -3,7 +3,6 @@ typedef struct HuffNode {
   int frequency;
   struct HuffNode * left;
   struct HuffNode * right;
-  char * code;
 }HuffNode;
 
 HuffNode * make_huffman_tree(char * string, int size, int range);
@@ -14,8 +13,8 @@ void sort(HuffNode ** level, int range);
 
 int make_compoundNode(HuffNode ** level, int size);
 
-void printFrequency(HuffNode * node, int * code, int depth);
+void printFrequency(FILE * file, HuffNode * node, int * code, int depth);
 
-char * findCode(HuffNode * node, char character);
+char * findCode(FILE * encoding, char character);
 
-char findCharacter(HuffNode * node, char * code, int index);
+char findCharacter(FILE * encoding, char * code, int index);

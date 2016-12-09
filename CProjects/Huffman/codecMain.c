@@ -28,7 +28,7 @@ int main(int argc, char ** argv) {
 }
 
 void encode(FILE * trainingFile, FILE * inputFile, FILE * outputFile) {
-  unsigned char c;
+  char c;
   char * charArray = malloc(sizeof(char) * 2000000);      // number of characters in training file
   int index = 0;
   c = fgetc(trainingFile);	// attempt to read a byte
@@ -38,10 +38,6 @@ void encode(FILE * trainingFile, FILE * inputFile, FILE * outputFile) {
     c = fgetc(trainingFile);
   }
   fclose(trainingFile);
-
-  HuffNode * root = make_huffman_tree(charArray, index, 256);
-  int * code = malloc(sizeof(int) * 100);                 // greatest possible number of bits to represent a letter.
-  printFrequency(root, code, 0);
 
   char * charArrayInput = malloc(sizeof(char) * 20000);      // number of characters in training file
   int counter = 0;
@@ -59,7 +55,15 @@ void encode(FILE * trainingFile, FILE * inputFile, FILE * outputFile) {
   file->fileToWrite = outputFile;
   file->charactersToWrite = malloc(sizeof(char) * counter);       // max size of characters of the file will be counter.
   file->charIndex = 0, file->bitIndex = 0;
-  file->root = root;
+
+  FILE * encodings;
+  encodings = fopen("encodings.txt", "w+");
+  file->encodings = encodings;
+
+  HuffNode * root = make_huffman_tree(charArray, index, 256);
+  int * code = malloc(sizeof(int) * 100);                 // greatest possible number of bits to represent a letter.
+  printFrequency(encodings, root, code, 0);
+
   int result = 1;
   printf("poo\n");
   while(result == 1) {

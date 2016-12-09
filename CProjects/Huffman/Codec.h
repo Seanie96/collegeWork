@@ -3,9 +3,9 @@
 typedef struct File{
   FILE * fileToRead;
   FILE * fileToWrite;
+  FILE * encodings;
   int charIndex, bitIndex;
   char * charactersToWrite;
-  HuffNode * root;
 }File;
 
 int encodeCharacter(File * file);

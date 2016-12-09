@@ -9,36 +9,45 @@ int encodeCharacter(File * file) {
   FILE * fileRead = file->fileToRead;
   char c = fgetc(fileRead);
   if(!feof(fileRead)) {
-    printf("char:%c\n", c);
-    char * code = findCode(file->root, c);
-    printf("code:%s\n", code);
-    char * charactersToWrite = file->charactersToWrite;
+    printf("char:%d\n", c);
+    char * code = findCode(file->encodings, c);
+    if(code == NULL) {
+      return -1;
+    } else  {
+      int count = 0;
+      char character = code[count];
+      while(code[count] != '\0') {
+        printf("%c", code[count++]);
+      }
+      printf("\ncode:%s\n", code);
+      char * charactersToWrite = file->charactersToWrite;
 
-    int charIndex = file->charIndex;
-    printf("charIndex:%d\n", charIndex);
-    int offSet = file->bitIndex;
-    int index = 0;
-    while(code[index] != '\0') {
-      char chartmp = charactersToWrite[charIndex];
-      int zeroOrOne;
-      if(code[index] == '0') {
-        zeroOrOne = 0;
-      } else  {
-        zeroOrOne = 1;
+      int charIndex = file->charIndex;
+      printf("charIndex:%d\n", charIndex);
+      int offSet = file->bitIndex;
+      int index = 0;
+      while(code[index] != '\0') {
+        char chartmp = charactersToWrite[charIndex];
+        int zeroOrOne;
+        if(code[index] == '0') {
+          zeroOrOne = 0;
+        } else  {
+          zeroOrOne = 1;
+        }
+        zeroOrOne = zeroOrOne << offSet;
+        chartmp = chartmp || zeroOrOne;
+        charactersToWrite[charIndex] = chartmp;
+        if(++offSet == 8) {
+          charIndex++;
+          offSet = 0;
+        }
+        index++;
       }
-      zeroOrOne = zeroOrOne << offSet;
-      chartmp = chartmp || zeroOrOne;
-      charactersToWrite[charIndex] = chartmp;
-      if(++offSet == 8) {
-        charIndex++;
-        offSet = 0;
-      }
-      index++;
+      file->charIndex = charIndex;
+      file->bitIndex = offSet;
+      printf("index:%d\n", charIndex);
+      return 1;
     }
-    file->charIndex = charIndex;
-    file->bitIndex = offSet;
-    printf("index:%d\n", charIndex);
-    return 1;
   } else  {
     return -1;
   }

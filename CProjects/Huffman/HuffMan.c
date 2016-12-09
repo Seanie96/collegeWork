@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "HuffMan.h"
 
@@ -72,59 +73,76 @@ int make_compoundNode(HuffNode ** level, int size) {
   compound->frequency = node1->frequency + node2->frequency;
   compound->left = node1;
   compound->right = node2;
+  compound->character = -2;     // make it a negative character so that the compound nodes can't be recognised as a leaf node.
   level[0] = compound;
   level[1] = NULL;
   return --size;
 }
 
-void printFrequency(HuffNode * node, int * code, int depth) {
+void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
+  if(node->character == -1) {
+    printf("pooo......");
+  }
   if(node->left != NULL) {
     code[depth] = 0;
     depth++;
-    printFrequency(node->left, code, depth);
+    printFrequency(file, node->left, code, depth);
     depth--;
   }
   if(node->right != NULL) {
     code[depth] = 1;
     depth++;
-    printFrequency(node->right, code, depth);
+    printFrequency(file, node->right, code, depth);
     depth--;
   }
-  if(node->left == NULL && node->right == NULL)  {
-    node->code = malloc(sizeof(char) * (depth + 1));          // possible size of encdoing...
+  if(node->left == NULL && node->right == NULL) {
+    char * codeChar = malloc(sizeof(char) * (depth + 1));          // possible size of encdoing...
     for(int i = 0; i < depth; i++) {
-      node->code[i] = (char)(0x30 + code[i]);
+      codeChar[i] = (0x30 + code[i]);
     }
-    node->code[depth] = '\0';
-    printf("character: %c, encoding:%s\n", node->character, node->code);
+    codeChar[depth] = '\n';
+    char * line = malloc(sizeof(char) * 256); // max size of line;
+    line[0] = node->character;
+    strcat(line, ",");
+    strcat(line, codeChar);
+    fputs(line, file);
     code[depth - 1] = NULL;
   }
 }
 
-char * findCode(HuffNode * node, char character) {
-  printf("in here!\n");
-  if(node->character == character) {
-    printf("char:%c\n", node->character);
-    return node->code;
+char * findCode(FILE * encoding, char character) {
+  char * line = fgets(line, 256, encoding);
+  while(line[0] != character) {
+    line = fgets(line, 256, encoding);
+  }
+  if(line[0] == character) {
+    return line;
   } else  {
-    if(node->left != NULL) {
-      printf("in here1!\n");
-      return findCode(node->left, character);
-    }
-    printf("in here!\n");
-    if(node->right != NULL) {
-      printf("in here2!\n");
-      return findCode(node->right, character);
-    }
+    line[0] = '-';
+    return line;
   }
 }
 
-char findCharacter(HuffNode * node, char * code, int index) {
-  if(code[index] == '0') {
-    return findCharacter(node->left, code, ++index);
-  } else if(code[index] == '1') {
-    return findCharacter(node->right, code, ++index);
-  } else {
-    return node->character;
+char findCharacter(FILE * encoding, char * code, int index) {
+  int foundEncoding = 0;
+  char character = '\0';
+  char * line = fgets(line, 256, encoding);
+  while(line != NULL && foundEncoding == 0) {
+      int index = 2;
+      int keepGoing = 1;
+      while(foundEncoding == 0 && keepGoing == 1) {
+        if(line[index] != code[index - 2]) {
+          keepGoing = 0;
+        }
+        if(line[index] == '\n') {
+          foundEncoding = 1;
+          character = line[0];
+        }
+        index++;
+      }
+      if(keepGoing == 0) {
+        line = fgets(line, 256, encoding);
+      }
   }
+  return character;
 }
