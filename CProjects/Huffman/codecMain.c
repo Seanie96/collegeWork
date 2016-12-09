@@ -57,12 +57,12 @@ void encode(FILE * trainingFile, FILE * inputFile, FILE * outputFile) {
   file->charIndex = 0, file->bitIndex = 0;
 
   FILE * encodings;
-  encodings = fopen("encodings.txt", "w+");
+  encodings = fopen("encodings.txt", "w");
   file->encodings = encodings;
 
   HuffNode * root = make_huffman_tree(charArray, index, 256);
   int * code = malloc(sizeof(int) * 100);                 // greatest possible number of bits to represent a letter.
-  printFrequency(encodings, root, code, 0);
+  printFrequency(file->encodings, root, code, 0);
 
   int result = 1;
   printf("poo\n");

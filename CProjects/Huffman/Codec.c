@@ -9,19 +9,15 @@ int encodeCharacter(File * file) {
   FILE * fileRead = file->fileToRead;
   char c = fgetc(fileRead);
   if(!feof(fileRead)) {
-    printf("char:%d\n", c);
+    printf("here?\n");
     char * code = findCode(file->encodings, c);
-    if(code == NULL) {
+    if(code[0] == '-') {
       return -1;
     } else  {
       int count = 0;
       char character = code[count];
-      while(code[count] != '\0') {
-        printf("%c", code[count++]);
-      }
-      printf("\ncode:%s\n", code);
+      printf("char:%c\n", code[0]);
       char * charactersToWrite = file->charactersToWrite;
-
       int charIndex = file->charIndex;
       printf("charIndex:%d\n", charIndex);
       int offSet = file->bitIndex;

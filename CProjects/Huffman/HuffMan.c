@@ -96,12 +96,12 @@ void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
     depth--;
   }
   if(node->left == NULL && node->right == NULL) {
-    char * codeChar = malloc(sizeof(char) * (depth + 1));          // possible size of encdoing...
+    char * codeChar = malloc(sizeof(char) * (depth));          // possible size of encdoing...
     for(int i = 0; i < depth; i++) {
       codeChar[i] = (0x30 + code[i]);
     }
     codeChar[depth] = '\n';
-    char * line = malloc(sizeof(char) * 256); // max size of line;
+    char * line = malloc(sizeof(char) * 50); // max size of line;
     line[0] = node->character;
     strcat(line, ",");
     strcat(line, codeChar);
@@ -111,9 +111,12 @@ void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
 }
 
 char * findCode(FILE * encoding, char character) {
-  char * line = fgets(line, 256, encoding);
-  while(line[0] != character) {
-    line = fgets(line, 256, encoding);
+  FILE * file = fopen("encodings.txt", "r");
+  char * line = malloc(sizeof(char) * 50);
+  printf("charNeeded:%c\n", character);
+  while(fgets(line, 256, file) != NULL) {
+    printf("charFound:%c\n", line[0]);
+    memset(line, 0, 50);
   }
   if(line[0] == character) {
     return line;
@@ -126,7 +129,8 @@ char * findCode(FILE * encoding, char character) {
 char findCharacter(FILE * encoding, char * code, int index) {
   int foundEncoding = 0;
   char character = '\0';
-  char * line = fgets(line, 256, encoding);
+  char * line = malloc(sizeof(char) * 256);
+  fgets(line, 256, encoding);
   while(line != NULL && foundEncoding == 0) {
       int index = 2;
       int keepGoing = 1;
@@ -141,7 +145,7 @@ char findCharacter(FILE * encoding, char * code, int index) {
         index++;
       }
       if(keepGoing == 0) {
-        line = fgets(line, 256, encoding);
+        fgets(line, 256, encoding);
       }
   }
   return character;
