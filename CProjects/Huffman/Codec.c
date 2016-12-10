@@ -8,6 +8,7 @@ int encodeCharacter(File * file) {
   FILE * fileWrite = file->fileToWrite;
   FILE * fileRead = file->fileToRead;
   char c = fgetc(fileRead);
+  c = fgetc(fileRead);
   if(!feof(fileRead)) {
     printf("here?\n");
     char * code = findCode(file->encodings, c);

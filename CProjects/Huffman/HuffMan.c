@@ -113,11 +113,12 @@ void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
 char * findCode(FILE * encoding, char character) {
   FILE * file = fopen("encodings.txt", "r");
   char * line = malloc(sizeof(char) * 50);
-  printf("charNeeded:%c\n", character);
-  while(fgets(line, 256, file) != NULL) {
-    printf("charFound:%c\n", line[0]);
+  printf("charNeeded:%d\n", character);
+  while(fgets(line, 256, file) != NULL && line[0] != character) {
+    printf("charFound:%d\n", line[0]);
     memset(line, 0, 50);
   }
+  printf("charFound:%d\n", line[0]);
   if(line[0] == character) {
     return line;
   } else  {
