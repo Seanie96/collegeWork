@@ -18,3 +18,5 @@ void printFrequency(FILE * file, HuffNode * node, int * code, int depth);
 char * findCode(FILE * encoding, char character);
 
 char findCharacter(FILE * encoding, char * code, int index);
+
+int get_line(FILE * file, char *buffer);

@@ -4,26 +4,25 @@
 #include "Codec.h"
 
 int encodeCharacter(File * file) {
-  printf("poo\n");
-  FILE * fileWrite = file->fileToWrite;
   FILE * fileRead = file->fileToRead;
+  FILE * encodings = file->encodings;
+  Encode * encode = file->encode;
   char c = fgetc(fileRead);
-  c = fgetc(fileRead);
   if(!feof(fileRead)) {
-    printf("here?\n");
-    char * code = findCode(file->encodings, c);
+    char * code = findCode(encodings, c);
     if(code[0] == '-') {
+      printf("here!\n");
       return -1;
     } else  {
-      int count = 0;
+      int count = 2;
+      printf("here!\n");
       char character = code[count];
-      printf("char:%c\n", code[0]);
+      printf("code:%s", code);
       char * charactersToWrite = file->charactersToWrite;
-      int charIndex = file->charIndex;
-      printf("charIndex:%d\n", charIndex);
-      int offSet = file->bitIndex;
+      int charIndex = encode->charIndex;
+      int offSet = encode->bitIndex;
       int index = 0;
-      while(code[index] != '\0') {
+      while(code[index] != '\n') {
         char chartmp = charactersToWrite[charIndex];
         int zeroOrOne;
         if(code[index] == '0') {
@@ -40,23 +39,31 @@ int encodeCharacter(File * file) {
         }
         index++;
       }
-      file->charIndex = charIndex;
-      file->bitIndex = offSet;
+      if(character == '\n') {
+        file->charactersToWrite[charIndex + 1] = '\0';
+      }
+      encode->charIndex = charIndex;
+      encode->bitIndex = offSet;
       printf("index:%d\n", charIndex);
       return 1;
     }
   } else  {
+    printf("end of text file!\n");
     return -1;
   }
 }
 
 int writeCharacters(File * file) {
   FILE * fileWrite = file->fileToWrite;
-  if(fputs(file->charactersToWrite, file->fileToWrite) == 0) {
-    return -1;
-  } else  {
-    return 1;
+  char * characters = file->charactersToWrite;
+  int keepGoing = 1, index = 0;
+  while(keepGoing == 1) {
+    fputc(characters[index++], fileWrite);
+    if(characters[index] == '\0') {
+      keepGoing = 0;
+    }
   }
+  return 1;
 }
 
 int decodeCharacter(File * file) {

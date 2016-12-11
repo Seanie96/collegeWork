@@ -80,9 +80,6 @@ int make_compoundNode(HuffNode ** level, int size) {
 }
 
 void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
-  if(node->character == -1) {
-    printf("pooo......");
-  }
   if(node->left != NULL) {
     code[depth] = 0;
     depth++;
@@ -111,20 +108,21 @@ void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
 }
 
 char * findCode(FILE * encoding, char character) {
-  FILE * file = fopen("encodings.txt", "r");
-  char * line = malloc(sizeof(char) * 50);
-  printf("charNeeded:%d\n", character);
-  while(fgets(line, 256, file) != NULL && line[0] != character) {
-    printf("charFound:%d\n", line[0]);
-    memset(line, 0, 50);
+  char * line = malloc(sizeof(char) * 100);
+  printf("charNeeded:%c\n", character);
+  int index = 0;
+  while(fgets(line, 256, encoding) != NULL) {
+    //int size = get_line(encoding, line);
+
+    if(line[0] == character) {
+      printf("found match\n");
+      return line;
+    }
+    index++;
+    memset(line, 0, 100);
   }
-  printf("charFound:%d\n", line[0]);
-  if(line[0] == character) {
-    return line;
-  } else  {
-    line[0] = '-';
-    return line;
-  }
+  line[0] = '-';
+  return line;
 }
 
 char findCharacter(FILE * encoding, char * code, int index) {
@@ -150,4 +148,16 @@ char findCharacter(FILE * encoding, char * code, int index) {
       }
   }
   return character;
+}
+
+int get_line(FILE * file, char * buffer) {
+  int index = 0, endOfLine = 0;
+  while(endOfLine == 0) {
+    char c = fgetc(file);
+    if(c == '\n') {
+      endOfLine = 1;
+    }
+    buffer[index++] = c;
+  }
+  return --index;
 }

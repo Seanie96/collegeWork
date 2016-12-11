@@ -1,11 +1,20 @@
 #include "HuffMan.h"
 
+typedef struct Encode{
+  int charIndex, bitIndex;
+}Encode;
+
+typedef struct Decode{
+
+}Decode;
+
 typedef struct File{
   FILE * fileToRead;
   FILE * fileToWrite;
   FILE * encodings;
-  int charIndex, bitIndex;
   char * charactersToWrite;
+  Encode * encode;
+  Decode * decode;
 }File;
 
 int encodeCharacter(File * file);
