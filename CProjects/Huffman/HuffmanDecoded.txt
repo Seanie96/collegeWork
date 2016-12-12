@@ -1,1 +1,1 @@
-rweslontiipievilu
+This is the input file will be used to create a Huffman encoded version of the text in it.

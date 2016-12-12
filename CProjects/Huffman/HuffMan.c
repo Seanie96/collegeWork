@@ -6,7 +6,7 @@
 
 HuffNode * make_huffman_tree(char * string, int size, int range) {
   HuffNode ** level;
-  level = malloc(sizeof(HuffNode *) * range);   // 10 possible levels!!
+  level = malloc(sizeof(HuffNode *) * range);                       // 10 possible levels!!
 
   for(int i = 0; i < range; i++) {
     level[i] = malloc(sizeof(HuffNode));
@@ -35,8 +35,6 @@ HuffNode * make_huffman_tree(char * string, int size, int range) {
     size = make_compoundNode(level, size);
     sort(level, (size + 1));
   }
-
-
   return level[0];
 }
 
@@ -73,7 +71,7 @@ int make_compoundNode(HuffNode ** level, int size) {
   compound->frequency = node1->frequency + node2->frequency;
   compound->left = node1;
   compound->right = node2;
-  compound->character = -2;     // make it a negative character so that the compound nodes can't be recognised as a leaf node.
+  compound->character = -2;                                       // make it a negative character so that the compound nodes can't be recognised as a leaf node.
   level[0] = compound;
   level[1] = NULL;
   return --size;

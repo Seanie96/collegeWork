@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "Codec.h"
 
 int findEncoding(File * file, int size) {
@@ -9,20 +10,18 @@ int findEncoding(File * file, int size) {
   char c = fgetc(fileRead);
   if(!feof(fileRead)) {
     char * code = findCode(c, table, size);
-    printf("char: %c, code:%s", c, code);
     if(code[0] == '-') {
-      printf("character is not in set of encodings.\n");
       return -1;
     } else  {
+      printf("char:%c", c);
       addEncoding(file, code);
       return 1;
     }
   } else  {
     char character = EOF;
     char * code = findCode(character, table, size);
+    printf("char:%c", character);
     addEncoding(file, code);
-    printf("char: %c, code:%s", character, code);
-    printf("end of text file!\n");
     return -1;
   }
 }
@@ -33,8 +32,8 @@ void addEncoding(File * file, char * code) {
   int charIndex = encode->charIndex;
   int offSet = encode->bitIndex;
 
-  printf("charIndex:%d, bitIndex:%d\n", charIndex, offSet);
-  printf("charEncodedBefore:%d\n", charactersToWrite[charIndex]);
+  printf("encoding:%s\n", code);
+
   int index = 0;
   while(code[index] != '\n') {
     char chartmp = charactersToWrite[charIndex];
@@ -44,11 +43,8 @@ void addEncoding(File * file, char * code) {
     } else  {
       zeroOrOne = 1;
     }
-    printf("zeroOrOne......before:%d\n", zeroOrOne);
     zeroOrOne = zeroOrOne << offSet;
-    printf("zeroOrOne......After:%d\n", zeroOrOne);
     chartmp = chartmp | zeroOrOne;
-    printf("charTmp......now:%d\n", chartmp);
     charactersToWrite[charIndex] = chartmp;
     if(++offSet == 8) {
       charIndex++;
@@ -56,10 +52,17 @@ void addEncoding(File * file, char * code) {
     }
     index++;
   }
-  printf("charEncodedAfter:%d\n", charactersToWrite[charIndex]);
+
+  char a = file->charactersToWrite[file->encode->charIndex];
+  int i;
+
+  for (i = 7; i >= 0; i--) {
+      printf("%d", !!((a << i) & 0x80));
+  }
+  printf("\n");
+
   encode->charIndex = charIndex;
   encode->bitIndex = offSet;
-  printf("index:%d\n", charIndex);
 }
 
 int writeCharacters(File * file) {
@@ -68,9 +71,7 @@ int writeCharacters(File * file) {
   int keepGoing = 1, index = 0;
   while(keepGoing == 1) {
     fputc(characters[index++], fileWrite);
-    printf("char:%d\n", characters[index]);
     if(characters[index] == '\0') {
-      printf("null char reached!\n");
       keepGoing = 0;
     }
   }
@@ -89,25 +90,18 @@ void getBits(File * file, int size) {
     printf("char:%c\n", c);
     if(!feof(fileRead)) {
       for(int i = 7; i >= 0; i--) {
-        int bit = 1;
-        bit = bit << i;
-        printf("num:%d\n", bit);
-        int bitReceived = bit & c;
-        printf("isolatedBit:%d\n", bitReceived);
-        bitReceived = bitReceived >> i;
-        printf("one Or Zero:%d\n", bitReceived);
+        int bit = !!((c << i) & 0x80);
         int index = (i - 7) * -1;
-        printf("indexPosition:%d", index);
-        bits[index + (bitCharIndex * 8)] = 0x30 + bitReceived;
-        printf("charPutIn: %c, indexPositionInBitArray:%d\n", (0x30 + bitReceived), (index + (bitCharIndex * 8)));
+        bits[index + (bitCharIndex * 8)] = 0x30 + bit;
+        printf("%d", bit);
         index++;
-        printf("i:%d\n", i);
       }
-      //getchar();
+      printf("\n");
       bitCharIndex++;
     }
+    bits[bitCharIndex * 8] = '\0';
   }
-  decode->size = (index + (bitCharIndex * 6));
+  decode->size = (bitCharIndex * 8);
 }
 
 void decodCharactersAndPrint(File * file) {
@@ -115,35 +109,52 @@ void decodCharactersAndPrint(File * file) {
   FILE * outputFile = file->fileToWrite;
   char ** table = file->table;
   char * bits = decode->bitArray;
-
+  printf("bits:%s................................................\n", decode->bitArray);
   int keepGoing = 1, startingIndex = 0, character = 0, endingIndex = 1;
   while(keepGoing == 1) {
-    int size = endingIndex - startingIndex;
-    char character, * code;
-    code = getSubString(bits, startingIndex, endingIndex);
-    while((character = findCharacter(code, table, size)) == NULL && endingIndex <= file->decode->size) {
-      code = getSubString(bits, startingIndex, ++endingIndex);
-      size = endingIndex - startingIndex;
+    int characterFound = 0;
+    while(characterFound == 0) {
+      printf("startingIndex:%d, endingIndex:%d\n", startingIndex, endingIndex);
+      int size = endingIndex - startingIndex;
+      char * code = malloc(sizeof(char) * (size + 1));
+      strncpy(code, &bits[startingIndex], size);
+      //code[size + 1] = '\n';
+      printf("code:%s\n", code);
+      char result = findCharacter(code, table, size);
+      if(result != NULL) {
+        characterFound = 1;
+        if(result == EOF) {
+          keepGoing = 0;
+        } else  {
+          fputc(result, outputFile);
+        }
+      }
+      endingIndex++;
     }
-    if(character != NULL) {
-      fputc(character, outputFile);
-    }
-    endingIndex++;
-    startingIndex = endingIndex++;
-    printf("startingIndex:%d, size:%d\n", startingIndex, file->decode->size);
-    if(startingIndex >= file->decode->size) {
-      keepGoing = 0;
-    }
+    startingIndex = endingIndex - 1;
   }
 }
 
-char * getSubString(char * bits, int startingIndex, int endingIndex) {
-  char * code = malloc(sizeof(char) * (endingIndex - startingIndex));
-  int size = endingIndex - startingIndex;
-  for(int i = 0; i < size; i++) {
-    code[i] = bits[i + startingIndex];
+char findCharacter(char * code, char ** table, int size) {
+  printf("codeRecieved:%s, size:%d\n", code, size);
+  for(int i = 0; i < 256; i++) {
+    char * codeInTable = malloc(sizeof(char) * 100);
+    int index = 2;
+    char tmp = table[i][index++];
+    while(tmp != '\n') {
+      tmp = table[i][index++];
+    }
+    strncpy(codeInTable, &table[i][2], (index - 3));
+    if(strcmp(codeInTable, code) == 0) {
+      free(codeInTable);
+      printf("found match!\n");
+      printf("codeFound:%s\n", code);
+      return table[i][0];
+    }
   }
-  return code;
+  printf("no match!!\n");
+  char c = NULL;
+  return c;
 }
 
 char * findCode(char character, char ** table, int size) {
@@ -166,26 +177,6 @@ char * findCode(char character, char ** table, int size) {
   char * row = malloc(sizeof(char));
   row[0] = '-';
   return row;
-}
-
-char findCharacter(char * code, char ** table, int size) {
-  int character = NULL;
-  for(int i = 0; i < size; i++) {
-    int keepGoing = 1, foundEncoding = 1, index = 2;
-    while(keepGoing == 1) {
-      if(table[i][index] == '\n') {
-        keepGoing = 0;
-      } else if(table[i][index] != code[index - 2]) {
-        keepGoing = 0;
-        foundEncoding = 0;
-      }
-      index++;
-    }
-    if(foundEncoding == 1) {
-      return table[i][0];
-    }
-  }
-  return character;
 }
 
 void putEncodingsToFile(File * file, int size) {

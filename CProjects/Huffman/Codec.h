@@ -27,8 +27,6 @@ void decodCharactersAndPrint(File * file);
 
 int writeCharacters(File * file);
 
-char * getSubString(char * bits, int startingIndex, int endingIndex);
-
 char * findCode(char character, char ** table, int size);
 
 char findCharacter(char * code, char ** table, int size);

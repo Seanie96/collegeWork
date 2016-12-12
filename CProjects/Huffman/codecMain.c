@@ -104,7 +104,6 @@ void decode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
   c = fgetc(trainingFile);	                                      // attempt to read a byte
   while( !feof(trainingFile) ) {
     charArray[index] = c;
-    //printf("index:%d, char:%c\n", index, c);
     index++;
     c = fgetc(trainingFile);
   }
@@ -133,34 +132,22 @@ void decode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
   Decode * decode = malloc(sizeof(Decode));
   decode->bitArray = malloc(sizeof(char) * (8 * counter));
   file->decode = decode;
-
-  printf("here!\n");
-
   char * encodingsTxt = "encodings.txt";
 
   HuffNode * root = make_huffman_tree(charArray, index, 256);
   int * code = malloc(sizeof(int) * 100);                         // greatest possible number of bits to represent a letter.
   int * count = malloc(sizeof(int));
-  //*count = 0;
   saveEncodings(root, code, 0, file->table, count);
 
   file->encodings = fopen(encodingsTxt, "w");
   putEncodingsToFile(file, 256);
   fclose(file->encodings);
 
-  printf("here!\n");
-
   file->fileToRead = fopen(inputFileTxt, "r");
-  printf("counter:%d\n", counter);
   getBits(file, counter);
   fclose(file->fileToRead);
-
-  printf("here!\n");
 
   file->fileToWrite = fopen(outputFileTxt, "w");
   decodCharactersAndPrint(file);
   fclose(file->fileToWrite);
-
-  printf("here!\n");
-
 }
