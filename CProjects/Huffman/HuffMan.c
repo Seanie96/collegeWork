@@ -79,85 +79,28 @@ int make_compoundNode(HuffNode ** level, int size) {
   return --size;
 }
 
-void printFrequency(FILE * file, HuffNode * node, int * code, int depth) {
+void saveEncodings(HuffNode * node, int * code, int depth, char ** table, int * index) {
   if(node->left != NULL) {
     code[depth] = 0;
     depth++;
-    printFrequency(file, node->left, code, depth);
+    saveEncodings(node->left, code, depth, table, index);
     depth--;
   }
   if(node->right != NULL) {
     code[depth] = 1;
     depth++;
-    printFrequency(file, node->right, code, depth);
+    saveEncodings(node->right, code, depth, table, index);
     depth--;
   }
   if(node->left == NULL && node->right == NULL) {
-    char * codeChar = malloc(sizeof(char) * (depth));          // possible size of encdoing...
-    for(int i = 0; i < depth; i++) {
-      codeChar[i] = (0x30 + code[i]);
+    table[*index] = malloc(sizeof(char) * (depth + 3));          // possible size of encdoing...
+    table[*index][0] = node->character;
+    table[*index][1] = ',';
+    for(int i = 2; (i-2) < depth; i++) {
+      table[*index][i] = (0x30 + code[i - 2]);
     }
-    codeChar[depth] = '\n';
-    char * line = malloc(sizeof(char) * 50); // max size of line;
-    line[0] = node->character;
-    strcat(line, ",");
-    strcat(line, codeChar);
-    fputs(line, file);
+    table[*index][depth + 2] = '\n';
     code[depth - 1] = NULL;
+    *index = *index + 1;
   }
-}
-
-char * findCode(FILE * encoding, char character) {
-  char * line = malloc(sizeof(char) * 100);
-  printf("charNeeded:%c\n", character);
-  int index = 0;
-  while(fgets(line, 256, encoding) != NULL) {
-    //int size = get_line(encoding, line);
-
-    if(line[0] == character) {
-      printf("found match\n");
-      return line;
-    }
-    index++;
-    memset(line, 0, 100);
-  }
-  line[0] = '-';
-  return line;
-}
-
-char findCharacter(FILE * encoding, char * code, int index) {
-  int foundEncoding = 0;
-  char character = '\0';
-  char * line = malloc(sizeof(char) * 256);
-  fgets(line, 256, encoding);
-  while(line != NULL && foundEncoding == 0) {
-      int index = 2;
-      int keepGoing = 1;
-      while(foundEncoding == 0 && keepGoing == 1) {
-        if(line[index] != code[index - 2]) {
-          keepGoing = 0;
-        }
-        if(line[index] == '\n') {
-          foundEncoding = 1;
-          character = line[0];
-        }
-        index++;
-      }
-      if(keepGoing == 0) {
-        fgets(line, 256, encoding);
-      }
-  }
-  return character;
-}
-
-int get_line(FILE * file, char * buffer) {
-  int index = 0, endOfLine = 0;
-  while(endOfLine == 0) {
-    char c = fgetc(file);
-    if(c == '\n') {
-      endOfLine = 1;
-    }
-    buffer[index++] = c;
-  }
-  return --index;
 }

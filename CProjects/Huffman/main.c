@@ -28,6 +28,6 @@ int main(int argc, char ** argv) {
   HuffNode * root = make_huffman_tree(charArray, index, 256);
   int * code = malloc(sizeof(int) * 100);
 
-  printFrequency(root, code, 0);
+  printEncodings(root, code, 0);
   return 0;
 }

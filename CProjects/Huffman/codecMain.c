@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include "Codec.h"
+#include "HuffMan.h"
 
 void encode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt);
 void decode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt);
@@ -46,6 +47,7 @@ void encode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
   fclose(inputFile);
 
   File * file = malloc(sizeof(File));
+  file->table = malloc(sizeof(char  *) * 256);
   file->fileToRead = inputFile;
   file->fileToWrite = outputFile;
   file->charactersToWrite = malloc(sizeof(char) * counter);       // max size of characters of the file will be counter.
@@ -55,26 +57,30 @@ void encode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
   file->encode = encode;
 
   char * encodingsTxt = "encodings.txt";
-  file->encodings = fopen(encodingsTxt, "w");
 
   HuffNode * root = make_huffman_tree(charArray, index, 256);
   int * code = malloc(sizeof(int) * 100);                 // greatest possible number of bits to represent a letter.
-  printFrequency(file->encodings, root, code, 0);
+  int * count = malloc(sizeof(int));
+  saveEncodings(root, code, 0, file->table, count);
+
+  file->encodings = fopen(encodingsTxt, "w");
+  putEncodingsToFile(file, 256);
   fclose(file->encodings);
 
   int result = 1;
+  for(int i = 0; i < 256; i++) {
+    printf("%s", file->table[i]);
+  }
 
   file->fileToRead = fopen(inputFileTxt, "r");
   while(result == 1) {
     file->encodings = fopen(encodingsTxt, "r");
-    result = encodeCharacter(file);
+    result = findEncoding(file, 256);
     fclose(file->encodings);
   }
   fclose(file->fileToRead);
 
   printf("encoded version: %s\n", file->charactersToWrite);
-
-
 
   file->fileToWrite = fopen(outputFileTxt, "w");
   if(writeCharacters(file) == -1) {
@@ -114,6 +120,5 @@ void decode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
     c = fgetc(inputFile);
   }
   fclose(inputFile);
-
 
 }
