@@ -77,43 +77,73 @@ int writeCharacters(File * file) {
   return 1;
 }
 
-int getBits(File * file, int size) {
+void getBits(File * file, int size) {
   char ** table = file->table;
   FILE * fileRead = file->fileToRead;
   Decode * decode = file->decode;
-  int bitCharIndex = decode->bitCharIndex;
-  bitChar = 0;
+  int bitCharIndex = 0;
   char * bits = decode->bitArray;       // 8 bits per char
-  bits = malloc(sizeof(char) * (size * 8));
-
+  int index = 0;
   for(int i = 0; i < size; i++) {
     char c = fgetc(fileRead);
+    printf("char:%c\n", c);
     if(!feof(fileRead)) {
-      for(int i = 7; i >= 0; i++) {
+      for(int i = 7; i >= 0; i--) {
         int bit = 1;
         bit = bit << i;
+        printf("num:%d\n", bit);
         int bitReceived = bit & c;
+        printf("isolatedBit:%d\n", bitReceived);
         bitReceived = bitReceived >> i;
+        printf("one Or Zero:%d\n", bitReceived);
         int index = (i - 7) * -1;
+        printf("indexPosition:%d", index);
         bits[index + (bitCharIndex * 8)] = 0x30 + bitReceived;
+        printf("charPutIn: %c, indexPositionInBitArray:%d\n", (0x30 + bitReceived), (index + (bitCharIndex * 8)));
+        index++;
+        printf("i:%d\n", i);
       }
+      //getchar();
       bitCharIndex++;
+    }
+  }
+  decode->size = (index + (bitCharIndex * 6));
+}
+
+void decodCharactersAndPrint(File * file) {
+  Decode * decode = file->decode;
+  FILE * outputFile = file->fileToWrite;
+  char ** table = file->table;
+  char * bits = decode->bitArray;
+
+  int keepGoing = 1, startingIndex = 0, character = 0, endingIndex = 1;
+  while(keepGoing == 1) {
+    int size = endingIndex - startingIndex;
+    char character, * code;
+    code = getSubString(bits, startingIndex, endingIndex);
+    while((character = findCharacter(code, table, size)) == NULL && endingIndex <= file->decode->size) {
+      code = getSubString(bits, startingIndex, ++endingIndex);
+      size = endingIndex - startingIndex;
+    }
+    if(character != NULL) {
+      fputc(character, outputFile);
+    }
+    endingIndex++;
+    startingIndex = endingIndex++;
+    printf("startingIndex:%d, size:%d\n", startingIndex, file->decode->size);
+    if(startingIndex >= file->decode->size) {
+      keepGoing = 0;
     }
   }
 }
 
-void decodedCharacter(File * file) {
-  Decode * decode = file->decode;
-  int bitCharIndex = decode->bitCharIndex;
-  char * bits = decode->bitArray;
-  char * characters = file->charactersToWrite;
-
-  int keepGoing = 1;
-  int startingIndex = 0;
-  int character = 0;
-  while(keepGoing == 1) {
-    while()
+char * getSubString(char * bits, int startingIndex, int endingIndex) {
+  char * code = malloc(sizeof(char) * (endingIndex - startingIndex));
+  int size = endingIndex - startingIndex;
+  for(int i = 0; i < size; i++) {
+    code[i] = bits[i + startingIndex];
   }
+  return code;
 }
 
 char * findCode(char character, char ** table, int size) {
@@ -138,7 +168,7 @@ char * findCode(char character, char ** table, int size) {
   return row;
 }
 
-int findCharacter(char * code, char ** table, int size) {
+char findCharacter(char * code, char ** table, int size) {
   int character = NULL;
   for(int i = 0; i < size; i++) {
     int keepGoing = 1, foundEncoding = 1, index = 2;

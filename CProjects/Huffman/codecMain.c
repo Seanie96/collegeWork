@@ -97,28 +97,70 @@ void encode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
 void decode(char * trainingFileTxt, char * inputFileTxt, char * outputFileTxt) {
   FILE * trainingFile, * inputFile, * outputFile;
   char c;
-  char * charArray = malloc(sizeof(char) * 2000000);      // number of characters in training file
+  char * charArray = malloc(sizeof(char) * 2000000);              // number of characters in training file
   int index = 0;
 
   trainingFile = fopen(trainingFileTxt, "r");
-  c = fgetc(trainingFile);	// attempt to read a byte
+  c = fgetc(trainingFile);	                                      // attempt to read a byte
   while( !feof(trainingFile) ) {
     charArray[index] = c;
+    //printf("index:%d, char:%c\n", index, c);
     index++;
     c = fgetc(trainingFile);
   }
   fclose(trainingFile);
 
-  char * charArrayInput = malloc(sizeof(char) * 20000);      // number of characters in training file
+  char * charArrayInput = malloc(sizeof(char) * 20000);           // number of characters in training file
   int counter = 0;
   inputFile = fopen(inputFileTxt, "r");
   c = fgetc(inputFile);	// attempt to read a byte
 
   while( !feof(inputFile) ) {
     charArrayInput[counter] = c;
+    printf("%c", c);
     counter++;
     c = fgetc(inputFile);
   }
   fclose(inputFile);
+
+  printf("\n");
+
+  File * file = malloc(sizeof(File));
+  file->table = malloc(sizeof(char  *) * 256);
+  file->fileToRead = inputFile;
+  file->fileToWrite = outputFile;
+  file->charactersToWrite = malloc(sizeof(char) * counter);       // max size of characters of the file will be counter.
+  Decode * decode = malloc(sizeof(Decode));
+  decode->bitArray = malloc(sizeof(char) * (8 * counter));
+  file->decode = decode;
+
+  printf("here!\n");
+
+  char * encodingsTxt = "encodings.txt";
+
+  HuffNode * root = make_huffman_tree(charArray, index, 256);
+  int * code = malloc(sizeof(int) * 100);                         // greatest possible number of bits to represent a letter.
+  int * count = malloc(sizeof(int));
+  //*count = 0;
+  saveEncodings(root, code, 0, file->table, count);
+
+  file->encodings = fopen(encodingsTxt, "w");
+  putEncodingsToFile(file, 256);
+  fclose(file->encodings);
+
+  printf("here!\n");
+
+  file->fileToRead = fopen(inputFileTxt, "r");
+  printf("counter:%d\n", counter);
+  getBits(file, counter);
+  fclose(file->fileToRead);
+
+  printf("here!\n");
+
+  file->fileToWrite = fopen(outputFileTxt, "w");
+  decodCharactersAndPrint(file);
+  fclose(file->fileToWrite);
+
+  printf("here!\n");
 
 }

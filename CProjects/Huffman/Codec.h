@@ -3,8 +3,8 @@ typedef struct Encode{
 }Encode;
 
 typedef struct Decode{
-  int bitCharIndex;
   char * bitArray;
+  int size;
 }Decode;
 
 typedef struct File{
@@ -21,11 +21,13 @@ int findEncoding(File * file, int size);
 
 void addEncoding(File * file, char * code);
 
-int getBits(File * file, int size);
+void getBits(File * file, int size);
 
-void decodedCharacter(File * file);
+void decodCharactersAndPrint(File * file);
 
 int writeCharacters(File * file);
+
+char * getSubString(char * bits, int startingIndex, int endingIndex);
 
 char * findCode(char character, char ** table, int size);
 
