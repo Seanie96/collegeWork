@@ -25,9 +25,19 @@ int main(int argc, char ** argv) {
     c = fgetc(file);
   }
   fclose(file);
+
   HuffNode * root = make_huffman_tree(charArray, index, 256);
   int * code = malloc(sizeof(int) * 100);
 
-  printEncodings(root, code, 0);
+  int * counter = malloc(sizeof(int));
+  char ** table = malloc(sizeof(char *) * 256);
+  saveEncodings(root, code, 0, table, counter);
+
+  for(int i = 0; i < 256; i++) {
+    printf("%s", table[i]);
+  }
+
+  free(root);
+
   return 0;
 }
