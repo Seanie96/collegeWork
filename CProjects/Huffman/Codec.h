@@ -4,7 +4,6 @@ typedef struct Encode{
 
 typedef struct Decode{
   char * bitArray;
-  int size;
 }Decode;
 
 typedef struct File{
@@ -25,10 +24,10 @@ void getBits(File * file, int size);
 
 void decodCharactersAndPrint(File * file);
 
-int writeCharacters(File * file, int size);
+void writeCharacters(File * file, int size);
 
 char * findCode(char character, char ** table, int size);
 
-char findCharacter(char * code, char ** table, int size);
+char findCharacter(char * code, char ** table);
 
 void putEncodingsToFile(File * file, int size);

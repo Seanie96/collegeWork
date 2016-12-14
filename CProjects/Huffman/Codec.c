@@ -4,6 +4,11 @@
 #include <string.h>
 #include "Codec.h"
 
+/*
+  This method finds the encoding of the next character recieved by fgetc(FILE * pt). It
+  then adds the encoding into a char array of o's and 1's. It returns 1 if the encoding was
+  successfully found, else it will return -1.
+*/
 int findEncoding(File * file, int size) {
   char ** table = file->table;
   FILE * fileRead = file->fileToRead;
@@ -13,32 +18,28 @@ int findEncoding(File * file, int size) {
     if(code[0] == '-') {
       return -1;
     } else  {
-      printf("%s", code);
-      //printf("char:%c", c);
       addEncoding(file, code);
       return 1;
     }
   } else  {
     char character = EOF;
     char * code = findCode(character, table, size);
-    //printf("%s", code);
-    //printf("char:%c", character);
     addEncoding(file, code);
     return -1;
   }
 }
 
+/*
+  This method specifically adds the encoding to a character array, stored in the File ADT
+*/
 void addEncoding(File * file, char * code) {
   char * charactersToWrite = file->charactersToWrite;
   Encode * encode = file->encode;
   int charIndex = encode->charIndex;
   int offSet = encode->bitIndex;
-  //printf("encoding:%s\n", code);
 
   int index = 0;
   while(code[index] != '\n') {
-    printf("code: %s\n", code);
-    printf("encodedVersion: %c\n", charactersToWrite[charIndex]);
     char chartmp = charactersToWrite[charIndex];
     int zeroOrOne;
     if(code[index] == '0') {
@@ -55,23 +56,24 @@ void addEncoding(File * file, char * code) {
     }
     index++;
   }
-
-  printf("In addEncoding, character:%c\n", charactersToWrite[0]);
   encode->charIndex = charIndex;
   encode->bitIndex = offSet;
 }
 
-int writeCharacters(File * file, int size) {
+/*
+  Writes the encoded characters stored in the File->encoded, to the File->fileToWrite attribute.
+*/
+void writeCharacters(File * file, int size) {
   FILE * fileWrite = file->fileToWrite;
   char * characters = file->charactersToWrite;
-  //int keepGoing = 1, index = 0;
   for(int i = 0; i < size; i++) {
-    printf("char: %c\n", characters[i]);
     fputc(characters[i], fileWrite);
   }
-  return 1;
 }
 
+/*
+  Gets the 0's and 1's bits of every character in the file and stores them in the bitArray in File->decode
+*/
 void getBits(File * file, int size) {
   char ** table = file->table;
   FILE * fileRead = file->fileToRead;
@@ -81,29 +83,26 @@ void getBits(File * file, int size) {
   int index = 0;
   for(int i = 0; i < size; i++) {
     char c = fgetc(fileRead);
-    //printf("char:%c\n", c);
     if(!feof(fileRead)) {
       for(int i = 7; i >= 0; i--) {
         int bit = !!((c << i) & 0x80);
         int index = (i - 7) * -1;
         bits[index + (bitCharIndex * 8)] = 0x30 + bit;
-        //printf("%d", bit);
         index++;
       }
-      //printf("\n");
       bitCharIndex++;
     }
-    //bits[bitCharIndex * 8] = '\0';                      that might need to be there!
   }
-  decode->size = (bitCharIndex * 8);
 }
 
+/*
+  decodes the bitArray in File * file, and prints the decoded characters into the file->fileToWrite.
+*/
 void decodCharactersAndPrint(File * file) {
   Decode * decode = file->decode;
   FILE * outputFile = file->fileToWrite;
   char ** table = file->table;
   char * bits = decode->bitArray;
-  //printf("bits:%s................................................\n", decode->bitArray);
   char * code;
   int size;
   int keepGoing = 1, startingIndex = 0, character = 0, endingIndex = 1;
@@ -111,34 +110,30 @@ void decodCharactersAndPrint(File * file) {
     int characterFound = 0;
     char result = NULL;
     while(characterFound == 0) {
-      printf("startingIndex:%d, endingIndex:%d\n", startingIndex, endingIndex);
       size = endingIndex - startingIndex;
       code = malloc(sizeof(char) * (size + 1));
       memset(code, 0, size + 1);
       strncpy(code, &bits[startingIndex], size);
-      //code[size + 1] = '\n';
-      //printf("code:%s\n", code);
-      result = findCharacter(code, table, size);
+      result = findCharacter(code, table);
       if(result != NULL) {
         characterFound = 1;
         if(result == EOF) {
           keepGoing = 0;
         } else  {
-          //printf("about to print!!");
           fputc(result, outputFile);
         }
       }
       endingIndex++;
-      //printf("encoding:%s\n", code);
       free(code);
     }
-    //printf("character:%c\n", result);
     startingIndex = endingIndex - 1;
   }
 }
 
-char findCharacter(char * code, char ** table, int size) {
-  //printf("codeRecieved:%s, size:%d\n", code, size);
+/*
+  Find the character associated with the given encoded series of bits, in the array of strings called table.
+*/
+char findCharacter(char * code, char ** table) {
   char * codeInTable;
   for(int i = 0; i < 256; i++) {
     codeInTable = malloc(sizeof(char) * 100);
@@ -150,18 +145,17 @@ char findCharacter(char * code, char ** table, int size) {
     }
     strncpy(codeInTable, &table[i][2], (index - 3));
     if(strcmp(codeInTable, code) == 0) {
-      //free(codeInTable);
-      //printf("found match!\n");
-      //printf("codeFound:%s\n", code);
       return table[i][0];
     }
     free(codeInTable);
   }
-  //printf("no match!!\n");
   char c = NULL;
   return c;
 }
 
+/*
+  Finds the encoded sequence of bits associated with the passed in character, in the array of strings called table.
+*/
 char * findCode(char character, char ** table, int size) {
   for(int i = 0; i < size; i++) {
     if(table[i][0] == character && table[i][1] == ',') {
@@ -175,7 +169,6 @@ char * findCode(char character, char ** table, int size) {
         code[counter - 2] = nextChar;
         counter++;
       }
-      printf("character: %c, code:%s", character ,code);
       code[counter - 1] = '\n';
       return code;
     }
@@ -185,6 +178,9 @@ char * findCode(char character, char ** table, int size) {
   return row;
 }
 
+/*
+  Uses fputs(File * file), to print out the strings of character to encodings, to the file->encodings.
+*/
 void putEncodingsToFile(File * file, int size) {
   FILE * encodings = file->encodings;
   char ** table = file->table;
