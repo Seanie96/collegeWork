@@ -98,4 +98,5 @@ void saveEncodings(HuffNode * node, int * code, int depth, char ** table, int * 
     code[depth - 1] = NULL;
     *index = *index + 1;
   }
+  free(node);
 }

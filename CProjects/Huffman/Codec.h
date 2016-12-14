@@ -25,7 +25,7 @@ void getBits(File * file, int size);
 
 void decodCharactersAndPrint(File * file);
 
-int writeCharacters(File * file);
+int writeCharacters(File * file, int size);
 
 char * findCode(char character, char ** table, int size);
 
