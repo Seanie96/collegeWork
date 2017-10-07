@@ -25,22 +25,22 @@ import java.util.regex.Pattern;
 
 /**
  *  <i>Input</i>. This class provides methods for reading strings
- *  and numbers from standard input, file input, URLs, and sockets. 
+ *  and numbers from standard input, file input, URLs, and sockets.
  *  <p>
  *  The Locale used is: language = English, country = US. This is consistent
  *  with the formatting conventions with Java floating-point literals,
  *  command-line arguments (via {@link Double#parseDouble(String)})
- *  and standard output. 
+ *  and standard output.
  *  <p>
- *  For additional documentation, see 
+ *  For additional documentation, see
  *  <a href="http://introcs.cs.princeton.edu/31datatype">Section 3.1</a> of
- *  <i>Introduction to Programming in Java: An Interdisciplinary Approach</i> 
+ *  <i>Introduction to Programming in Java: An Interdisciplinary Approach</i>
  *  by Robert Sedgewick and Kevin Wayne.
  *  <p>
  *  Like {@link Scanner}, reading a token also consumes preceding Java
  *  whitespace, reading a full line consumes
  *  the following end-of-line delimeter, while reading a character consumes
- *  nothing extra. 
+ *  nothing extra.
  *  <p>
  *  Whitespace is defined in {@link Character#isWhitespace(char)}. Newlines
  *  consist of \n, \r, \r\n, and Unicode hex code points 0x2028, 0x2029, 0x0085;
@@ -52,21 +52,21 @@ import java.util.regex.Pattern;
  *  @author Kevin Wayne
  */
 public final class In {
-    
+
     ///// begin: section (1 of 2) of code duplicated from In to StdIn.
-    
+
     // assume Unicode UTF-8 encoding
     private static final String CHARSET_NAME = "UTF-8";
 
     // assume language = English, country = US for consistency with System.out.
     private static final Locale LOCALE = Locale.US;
 
-    // the default token separator; we maintain the invariant that this value 
+    // the default token separator; we maintain the invariant that this value
     // is held by the scanner's delimiter between calls
     private static final Pattern WHITESPACE_PATTERN
         = Pattern.compile("\\p{javaWhitespace}+");
 
-    // makes whitespace characters significant 
+    // makes whitespace characters significant
     private static final Pattern EMPTY_PATTERN
         = Pattern.compile("");
 
@@ -194,11 +194,11 @@ public final class In {
     }
 
     /**
-     * Initializes an input stream from a given {@link Scanner} source; use with 
+     * Initializes an input stream from a given {@link Scanner} source; use with
      * {@code new Scanner(String)} to read from a string.
      * <p>
      * Note that this does not create a defensive copy, so the
-     * scanner will be mutated as you read on. 
+     * scanner will be mutated as you read on.
      *
      * @param  scanner the scanner
      * @throws NullPointerException if {@code scanner} is {@code null}
@@ -216,13 +216,13 @@ public final class In {
     public boolean exists()  {
         return scanner != null;
     }
-    
+
     ////  begin: section (2 of 2) of code duplicated from In to StdIn,
     ////  with all methods changed from "public" to "public static".
 
    /**
      * Returns true if input stream is empty (except possibly whitespace).
-     * Use this to know whether the next call to {@link #readString()}, 
+     * Use this to know whether the next call to {@link #readString()},
      * {@link #readDouble()}, etc will succeed.
      *
      * @return {@code true} if this input stream is empty (except possibly whitespace);
@@ -232,7 +232,7 @@ public final class In {
         return !scanner.hasNext();
     }
 
-   /** 
+   /**
      * Returns true if this input stream has a next line.
      * Use this method to know whether the
      * next call to {@link #readLine()} will succeed.
@@ -249,9 +249,9 @@ public final class In {
      * Returns true if this input stream has more inputy (including whitespace).
      * Use this method to know whether the next call to {@link #readChar()} will succeed.
      * This method is functionally equivalent to {@link #hasNextLine()}.
-     * 
+     *
      * @return {@code true} if this input stream has more input (including whitespace);
-     *         {@code false} otherwise   
+     *         {@code false} otherwise
      */
     public boolean hasNextChar() {
         scanner.useDelimiter(EMPTY_PATTERN);
@@ -289,7 +289,7 @@ public final class In {
             + " Please contact the authors.";
         scanner.useDelimiter(WHITESPACE_PATTERN);
         return ch.charAt(0);
-    }  
+    }
 
 
    /**
@@ -469,14 +469,14 @@ public final class In {
             vals[i] = Double.parseDouble(fields[i]);
         return vals;
     }
-    
+
     ///// end: section (2 of 2) of code duplicated from In to StdIn */
 
    /**
      * Closes this input stream.
      */
     public void close() {
-        scanner.close();  
+        scanner.close();
     }
 
     /**
@@ -553,7 +553,7 @@ public final class In {
     public static String[] readStrings() {
         return new In().readAllStrings();
     }
-    
+
    /**
      * Unit tests the {@code In} data type.
      *

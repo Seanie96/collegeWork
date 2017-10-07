@@ -1,0 +1,46 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+HaskellIntro	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/README.md	/^# HaskellIntro$/;"	function	line:1
+VERSION_HaskellIntro	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define VERSION_HaskellIntro /;"	macro	line:4
+MIN_VERSION_HaskellIntro	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_VERSION_HaskellIntro(/;"	macro	line:5
+VERSION_base	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define VERSION_base /;"	macro	line:11
+MIN_VERSION_base	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_VERSION_base(/;"	macro	line:12
+TOOL_VERSION_gcc	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_gcc /;"	macro	line:18
+MIN_TOOL_VERSION_gcc	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_gcc(/;"	macro	line:19
+TOOL_VERSION_ghc	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_ghc /;"	macro	line:25
+MIN_TOOL_VERSION_ghc	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_ghc(/;"	macro	line:26
+TOOL_VERSION_ghc_pkg	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_ghc_pkg /;"	macro	line:32
+MIN_TOOL_VERSION_ghc_pkg	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_ghc_pkg(/;"	macro	line:33
+TOOL_VERSION_haddock	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_haddock /;"	macro	line:39
+MIN_TOOL_VERSION_haddock	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_haddock(/;"	macro	line:40
+TOOL_VERSION_happy	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_happy /;"	macro	line:46
+MIN_TOOL_VERSION_happy	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_happy(/;"	macro	line:47
+TOOL_VERSION_hpc	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_hpc /;"	macro	line:53
+MIN_TOOL_VERSION_hpc	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_hpc(/;"	macro	line:54
+TOOL_VERSION_hsc2hs	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_hsc2hs /;"	macro	line:60
+MIN_TOOL_VERSION_hsc2hs	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_hsc2hs(/;"	macro	line:61
+TOOL_VERSION_pkg_config	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_pkg_config /;"	macro	line:67
+MIN_TOOL_VERSION_pkg_config	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_pkg_config(/;"	macro	line:68
+TOOL_VERSION_strip	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define TOOL_VERSION_strip /;"	macro	line:74
+MIN_TOOL_VERSION_strip	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define MIN_TOOL_VERSION_strip(/;"	macro	line:75
+CURRENT_COMPONENT_ID	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define CURRENT_COMPONENT_ID /;"	macro	line:80
+CURRENT_PACKAGE_KEY	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/.stack-work/dist/x86_64-linux/Cabal-1.24.2.0/build/autogen/cabal_macros.h	/^#define CURRENT_PACKAGE_KEY /;"	macro	line:82
+resolver	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/stack.yaml	/^resolver: lts-9.6$/;"	function	line:18
+packages	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/stack.yaml	/^packages:$/;"	function	line:38
+flags	/home/seanmcdonagh/Documents/collegeWork/Haskell/HaskellIntro/stack.yaml	/^flags: {}$/;"	function	line:45
+atom-text-editor::shadow, ide-haskell-panel	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^atom-text-editor::shadow, ide-haskell-panel {$/;"	function	line:2
+.support.function.prelude.haskell	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^  .support.function.prelude.haskell {$/;"	function	line:3
+&.undefined, &.error	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^    &.undefined, &.error {$/;"	function	line:4
+.keyword.operator.haskell	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^  .keyword.operator.haskell {$/;"	function	line:9
+.keyword.operator.infix.haskell	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^  .keyword.operator.infix.haskell {$/;"	function	line:12
+.syntax--support.syntax--function.syntax--prelude.syntax--haskell	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^.syntax--support.syntax--function.syntax--prelude.syntax--haskell {$/;"	function	line:17
+&.syntax--undefined, &.syntax--error	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^  &.syntax--undefined, &.syntax--error {$/;"	function	line:18
+.syntax--keyword.syntax--operator.syntax--haskell	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^.syntax--keyword.syntax--operator.syntax--haskell {$/;"	function	line:25
+.syntax--keyword.syntax--operator.syntax--infix.syntax--haskell	/home/seanmcdonagh/Documents/collegeWork/Haskell/styles.less	/^.syntax--keyword.syntax--operator.syntax--infix.syntax--haskell {$/;"	function	line:28
+resolver	/home/seanmcdonagh/Documents/collegeWork/Haskell/stack.yaml	/^resolver: lts-9.6$/;"	function	line:18
+packages	/home/seanmcdonagh/Documents/collegeWork/Haskell/stack.yaml	/^packages:$/;"	function	line:38
+flags	/home/seanmcdonagh/Documents/collegeWork/Haskell/stack.yaml	/^flags: {}$/;"	function	line:45

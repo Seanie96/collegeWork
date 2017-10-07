@@ -1,0 +1,7 @@
+/home/seanmcdonagh/Documents/collegeWork/CProjects/Huffman/Huffman.c: In function ‘saveEncodings’:
+/home/seanmcdonagh/Documents/collegeWork/CProjects/Huffman/Huffman.c:117:23: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     code[depth - 1] = (int)NULL;
+                       ^
+/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/crt1.o: In function `_start':
+(.text+0x20): undefined reference to `main'
+collect2: error: ld returned 1 exit status

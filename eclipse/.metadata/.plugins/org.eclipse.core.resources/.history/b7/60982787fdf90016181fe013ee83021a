@@ -1,0 +1,12 @@
+
+public class CacheServer {
+	int[] endpoints;
+	
+	
+	public CacheServer(){
+		
+		
+	}
+	
+
+}
