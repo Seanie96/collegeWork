@@ -1,0 +1,4 @@
+"main.c":
+	debugger: "dbg-gdb"
+	path: "main.c"
+	cwd: "C:\\Users\\SEMCDONA\\Documents\\collegeWork\\CProjects\\Bloom"
