@@ -7,19 +7,19 @@ program Test {
 
    void SumUp() {
       int j, sum;
-      
+
       void Subtract() {
          i := i - 1;
       }
-      
+
       void Add() {
          if i > 0 {
-            sum := sum + i; 
+            sum := sum + i;
             Subtract();
             Add();
          }
       }
-      
+
       j := i;
       sum := 0;
       Add();
