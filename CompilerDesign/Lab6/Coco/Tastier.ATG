@@ -252,7 +252,7 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
       Stat
       ]               	 (. gen.Label(l2); .)
    )
-| ("switch"				 (. int l1 = gen.NewLabel(), l2 = 0; int counter = 0; int type1; int reg1;  .)
+| ("switch"				 (. int l1 = gen.NewLabel(), l2 = 0, l3 = 0; int counter = 0; int type1; int reg1;  .)
    "("
    Primary<out reg,			
   	      out type>		 (. 
@@ -261,11 +261,11 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
   	   					 .)
    ")"
   {
-  	"case"				(. gen.GetRegister(); if(counter != 0) { gen.Label(l2); }.)
+  	"case"				(. gen.GetRegister(); if(counter != 0) { gen.Label(l2); } .)
   	"("
   	Primary<out reg,
-  			out type>	(.
-      							counter++;
+  			out type>	    (.
+  								counter++;
       							if(type1 == type) {
       								gen.RelOp(Op.EQU, reg, reg1);
       								l2 = gen.NewLabel();
@@ -274,18 +274,23 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
       								SemErr("Type error");
       							}
       						.)
-  	")"
-  	"{"
-  	Stat
+  	")"					(.	
+  							if(counter != 1) {
+  								gen.Label(l3);
+  							}
+  						.)
+  	"{"					
+  	Stat				
   	{Stat}
     [
-		"break"		    (. 
+		"break;"		 (. 
 		                    gen.Branch(l1);
 		                .)
     ]
   	"}"					(. 
-  							    gen.Branch(l2);
-  						  .)
+  							l3 = gen.NewLabel();
+  							gen.Branch(l3);
+  						.)
   }
   						(.
   							if(counter == 0) {
@@ -295,6 +300,7 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
 
   "default"	            (. 
     					     gen.Label(l2);
+    					     gen.Label(l3);
     					.)
 
   "{"

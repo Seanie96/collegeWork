@@ -408,7 +408,7 @@ out type);
 		}
 		case 28: {
 			Get();
-			int l1 = gen.NewLabel(), l2 = 0; int counter = 0; int type1; int reg1;  
+			int l1 = gen.NewLabel(), l2 = 0, l3 = 0; int counter = 0; int type1; int reg1;  
 			Expect(8);
 			Primary(out reg,			
 out type);
@@ -418,20 +418,24 @@ out type);
 			Expect(9);
 			while (la.kind == 29) {
 				Get();
-				gen.GetRegister(); if(counter != 0) { gen.Label(l2); }
+				gen.GetRegister(); if(counter != 0) { gen.Label(l2); } 
 				Expect(8);
 				Primary(out reg,
 out type);
 				counter++;
-				if(type1 == type) {
-				gen.RelOp(Op.EQU, reg, reg1);
-				l2 = gen.NewLabel();
-				gen.BranchFalse(l2);
-				}	else	{
-				SemErr("Type error");
+						if(type1 == type) {
+							gen.RelOp(Op.EQU, reg, reg1);
+							l2 = gen.NewLabel();
+							gen.BranchFalse(l2);
+						}	else	{
+							SemErr("Type error");
+						}
+					
+				Expect(9);
+				if(counter != 1) {
+				gen.Label(l3);
 				}
 				
-				Expect(9);
 				Expect(16);
 				Stat();
 				while (StartOf(2)) {
@@ -443,7 +447,8 @@ out type);
 					
 				}
 				Expect(17);
-				gen.Branch(l2);
+				l3 = gen.NewLabel();
+				gen.Branch(l3);
 				
 			}
 			if(counter == 0) {
@@ -452,6 +457,7 @@ out type);
 			
 			Expect(31);
 			gen.Label(l2);
+			gen.Label(l3);
 			
 			Expect(16);
 			Stat();
@@ -652,7 +658,7 @@ public class Errors {
 			case 27: s = "\"else\" expected"; break;
 			case 28: s = "\"switch\" expected"; break;
 			case 29: s = "\"case\" expected"; break;
-			case 30: s = "\"break\" expected"; break;
+			case 30: s = "\"break;\" expected"; break;
 			case 31: s = "\"default\" expected"; break;
 			case 32: s = "\"while\" expected"; break;
 			case 33: s = "\"read\" expected"; break;
