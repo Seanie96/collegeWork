@@ -2,7 +2,7 @@ program SwitchSatetementTest {
    
    int n, p;
 
-   void test() {
+   void main() {
       n := 5;
       switch (n)
          case (4) {

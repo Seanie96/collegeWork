@@ -1,5 +1,4 @@
-; Procedure test
-testBody
+MainBody
     LDR     R5, =5
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
@@ -112,11 +111,10 @@ L7
  ADD R2, R4, R2, LSL #2
  STR R5, [R2] ; n
 L1
-    MOV     TOP, BP         ; reset top of stack
-    LDR     BP, [TOP,#12]   ; and stack base pointers
-    LDR     PC, [TOP]       ; return from test
-test
+StopSwitchSatetementTest
+    B       StopSwitchSatetementTest
+Main
     LDR     R0, =1          ; current lexic level
     LDR     R1, =0          ; number of local variables
     BL      enter           ; build new stack frame
-    B       testBody
+    B       MainBody
