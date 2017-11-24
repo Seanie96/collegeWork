@@ -1,0 +1,30 @@
+program SwitchSatetementTest {
+   
+   int n, p;
+
+   void test() {
+      n := 5;
+      switch (n)
+         case (4) {
+            n := n - 0;
+         }
+         case (6) {
+            n := n - 2;
+         }
+         case (7) {
+            n := n - 3;
+         }
+         case (8) {
+            n := n - 4;
+         }
+         case (9) {
+            n := n - 5;
+         }
+         case (10) {
+            n := n - 6;
+         }
+         default {
+            n := n - 1;
+         }
+   }
+}

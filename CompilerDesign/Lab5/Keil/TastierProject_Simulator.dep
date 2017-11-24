@@ -1,0 +1,12 @@
+Dependencies for Project 'TastierProject', Target 'Simulator': (DO NOT MODIFY !)
+F (.\TastierProject.s)(0x5A0394AE)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 523" --pd "NO_CLOCK_SETUP SETA 1" --pd "NO_EMC_SETUP SETA 1" --pd "RAM_INTVEC SETA 1" --pd "RAM_MODE SETA 1" --pd "REMAP SETA 1"--list .\tastierproject.lst --xref -o .\tastierproject.o --depend .\tastierproject.d)
+F (.\LPC2400.s)(0x57BC6076)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 523" --pd "NO_CLOCK_SETUP SETA 1" --pd "NO_EMC_SETUP SETA 1" --pd "RAM_INTVEC SETA 1" --pd "RAM_MODE SETA 1" --pd "REMAP SETA 1"--list .\lpc2400.lst --xref -o .\lpc2400.o --depend .\lpc2400.d)
+F (.\TastierSupport.c)(0x5804ED78)(-c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\tastiersupport.o --omf_browse .\tastiersupport.crf --depend .\tastiersupport.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F67738)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x57F67738)
+F (.\Serial.c)(0x57FBA38E)(-c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\serial.o --omf_browse .\serial.crf --depend .\serial.d)
+F (.\Retarget.c)(0x57FBA350)(-c --cpu ARM7TDMI -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Philips-D__UVISION_VERSION="523"-o .\retarget.o --omf_browse .\retarget.crf --depend .\retarget.d)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x57F67738)
+I (C:\Keil_v5\ARM\ARMCC\include\rt_misc.h)(0x57F67738)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x57F67738)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F67738)

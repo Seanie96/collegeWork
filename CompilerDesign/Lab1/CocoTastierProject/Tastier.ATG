@@ -1,7 +1,7 @@
 COMPILER Tastier
 
    const int // object kinds
-      var = 0, proc = 1;
+      var = 0, proc = 1, constant = 3;
 
    const int // types
       undef = 0, integer = 1, boolean = 2;
@@ -77,7 +77,7 @@ Primary<out int reg,     // load Primary into register
                          .)
   ( Ident<out name>      (.
                             obj = tab.Find(name); type = obj.type;
-                            if (obj.kind == var) {
+                            if (obj.kind == var || obj.kind == constant) {
                                if (obj.level == 0)
                                   gen.LoadGlobal(reg, obj.adr, name);
                                else
@@ -86,7 +86,7 @@ Primary<out int reg,     // load Primary into register
                                // reset Z flag in CPSR
                                   gen.ResetZ(reg);
                             }
-                            else SemErr("variable expected");
+                            else SemErr("variable or constant expected");
                          .)
 
   | number               (.
@@ -159,7 +159,7 @@ ProcDecl<string progName>
   '(' ')'
   '{'
      {
-     VarDecl
+     VarDecl | ConstDecl
      }
      {
      ProcDecl<progName>
@@ -217,7 +217,8 @@ SimExpr<out int reg,     //load value of SimExpr into register
 
 Stat                     (. int type; string name; Obj obj; int reg; .)
 = Ident<out name>        (. obj = tab.Find(name); .)
-  ( ":="                 (.
+  ( 
+    ":="(               (.
                             if (obj.kind != var)
                                SemErr("cannot assign to procedure");
                          .)
@@ -228,13 +229,14 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
                                   gen.StoreGlobal(reg, obj.adr, name);
                                else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
                          .)
-  | '(' ')' ';'          (.
+    )
+
+    | '(' ')' ';'          (.
                             if (obj.kind == proc)
                                gen.Call(name);
                             else SemErr("object is not a procedure");
                          .)
   )
-
 | "if"                   (. int l1, l2; l1 = 0; .)
   Expr<out reg,
        out type>         (.
@@ -251,7 +253,7 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
                          .)
       [ "else"
       Stat
-      ]               	 (. gen.Label(l2); .)
+      ]                  (. gen.Label(l2); .)
 
 | "while"                (.
                             int l1, l2;
@@ -312,8 +314,8 @@ Stat                     (. int type; string name; Obj obj; int reg; .)
   ';'
 
 | '{'                      (. tab.OpenSubScope(); .)
-  { VarDecl }
-  Stat { Stat }
+  { VarDecl | ConstDecl}
+   Stat {Stat}
   '}'                      (. tab.CloseSubScope(); .)
 .
 
@@ -323,7 +325,7 @@ Tastier                  (. string progName; .)
   = "program"
   Ident<out progName>    (. tab.OpenScope(); .)
   '{'
-    { VarDecl }          // global variables
+    { VarDecl | ConstDecl }          // global variables
     { ProcDecl<progName> }
                          (. tab.CloseScope(); .)
   '}'
@@ -363,6 +365,21 @@ VarDecl                  (. string name; int type; .)
   { ","
     Ident<out name>      (. tab.NewObj(name, var, type); .)
   } ";"
+.
+
+ConstDecl                (. string name; int type, type2; Obj obj; int reg .)
+= "const"
+  Type<out type1>
+  Ident<out name>        (. obj = tab.NewObj(name, constant, type1); .)
+  "="
+  Expr<out reg,
+         out type2>       (.
+                            if (type1 == type2)
+                               if (obj.level == 0)
+                                  gen.StoreGlobal(reg, obj.adr, name);
+                               else gen.StoreLocal(reg, tab.curLevel-obj.level, obj.adr, name);
+                         .)
+  ';'
 .
 
 END Tastier.

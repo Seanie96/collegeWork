@@ -1,0 +1,46 @@
+// program to read integer values n (n > 0) from the console
+// and, for each one, print the sum of the values from 1 to n
+
+program Test {
+
+   int i;
+   int arr[1..1000];
+   int arrTwo[1..1000, 1..2000];
+
+   void SumUp() {
+      const limit = 512, tmp = 543;
+      int j, sum;
+      
+      void Subtract() {
+         i := i - limit;
+      }
+      
+      void Add() {
+         if i > 0 {
+            sum := sum + i; 
+            Subtract();
+            Add();
+         }
+      }
+
+      arr[100] := 12;
+      arrTwo[122, 124] := limit;
+      arrTwo[124, 423] := [12]arr;
+      j := i;
+      sum := limit;
+      Add();
+      write "The sum of the values from 1 to ";
+      write j; write " is ";
+      writeln sum;
+   }
+
+   void main() {
+      write "Enter value for i (or 0 to stop): ";
+      read i;
+      while i > 0 {
+         SumUp();
+         write "Enter value for i (or 0 to stop): ";
+         read i;
+      }
+   }
+}

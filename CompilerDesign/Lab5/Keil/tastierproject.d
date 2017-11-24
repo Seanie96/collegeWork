@@ -1,0 +1,1 @@
+.\tastierproject.o: TastierProject.s

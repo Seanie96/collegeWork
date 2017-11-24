@@ -109,10 +109,10 @@ SumUp
     LDR     R1, =2          ; number of local variables
     BL      enter           ; build new stack frame
     B       SumUpBody
-;  name: j, type: local integer variable
-;  name: sum, type: local integer variable
-;  name: Subtract, type: procedure
-;  name: Add, type: procedure
+;Name: j, Type: integer, Kind: var, Level: local
+;Name: sum, Type: integer, Kind: var, Level: local
+;Name: Subtract, Type: undef, Kind: proc, Level: local
+;Name: Add, Type: undef, Kind: proc, Level: local
 MainBody
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
@@ -124,31 +124,6 @@ L5
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
  STR R0, [R2] ; i
-L6
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- LDR R5, [R2] ; i
-    LDR     R6, =0
-    CMP     R5, R6
-    MOVGT   R5, #1
-    MOVLE   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L7              ; jump on condition false
-    ADD     R0, PC, #4      ; store return address
-    STR     R0, [TOP]       ; in new stack frame
-    B       SumUp
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L8
-    DCB     "Enter value for i (or 0 to stop): ", 0
-    ALIGN
-L8
-    BL      TastierReadInt
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R0, [R2] ; i
-    B       L6
-L7
 StopTest
     B       StopTest
 Main
@@ -156,6 +131,7 @@ Main
     LDR     R1, =0          ; number of local variables
     BL      enter           ; build new stack frame
     B       MainBody
-;  name: i, type: global integer variable
-;  name: SumUp, type: procedure
-;  name: main, type: procedure
+;Name: i, Type: integer, Kind: var, Level: global
+;Name: SumUp, Type: undef, Kind: proc, Level: global
+;Name: main, Type: undef, Kind: proc, Level: global
+1 compilation error(s)

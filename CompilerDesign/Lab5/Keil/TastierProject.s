@@ -27,6 +27,19 @@ main
 	LDR 	BP, =stack		; address of stack base
 	LDR 	TOP, =stack+16	; address of top of stack frame
 	B		Main
+    LDR     R5, =10
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R5, [R2] ; popop
+    LDR     R5, =120
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R5, [R2] ; rqwewe
+    LDR     R5, =512
+    ADD     R2, BP, #16
+    LDR     R1, =0
+    ADD     R2, R2, R1, LSL #2
+    STR     R5, [R2]        ; limit
 ; Procedure Subtract
 SubtractBody
  LDR R2, =0
@@ -138,10 +151,16 @@ SumUp
     LDR     R1, =2          ; number of local variables
     BL      enter           ; build new stack frame
     B       SumUpBody
-;  name: j, type: local integer variable
-;  name: sum, type: local integer variable
-;  name: Subtract, type: procedure
-;  name: Add, type: procedure
+;Name: limit, Type: integer, Kind: constant, Level: local, Init: True
+;Name: j, Type: integer, Kind: var, Level: local, Init: False
+;Name: sum, Type: integer, Kind: var, Level: local, Init: False
+;Name: Subtract, Type: undef, Kind: proc, Level: local, Init: False
+;Name: Add, Type: undef, Kind: proc, Level: local, Init: False
+    LDR     R5, =12
+    ADD     R2, BP, #16
+    LDR     R1, =0
+    ADD     R2, R2, R1, LSL #2
+    STR     R5, [R2]        ; wewewe
 MainBody
     ADD     R0, PC, #4      ; string address
     BL      TastierPrintString
@@ -185,9 +204,13 @@ Main
     LDR     R1, =0          ; number of local variables
     BL      enter           ; build new stack frame
     B       MainBody
-;  name: i, type: global integer variable
-;  name: SumUp, type: procedure
-;  name: main, type: procedure
+;Name: wewewe, Type: integer, Kind: constant, Level: local, Init: True
+;Name: i, Type: integer, Kind: var, Level: global, Init: False
+;Name: popop, Type: integer, Kind: constant, Level: global, Init: True
+;Name: weqwe, Type: integer, Kind: constant, Level: global, Init: False
+;Name: rqwewe, Type: integer, Kind: constant, Level: global, Init: True
+;Name: SumUp, Type: undef, Kind: proc, Level: global, Init: False
+;Name: main, Type: undef, Kind: proc, Level: global, Init: False
 
 ; Subroutine enter
 ; Construct stack frame for procedure

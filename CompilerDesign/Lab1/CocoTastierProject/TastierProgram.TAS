@@ -24,6 +24,7 @@ program Test {
       sum := 0;
       Add();
       write "The sum of the values from 1 to ";
+      
       write j; write " is ";
       writeln sum;
    }
@@ -31,6 +32,7 @@ program Test {
    void main() {
       write "Enter value for i (or 0 to stop): ";
       read i;
+      const bool t = true;
       while i > 0 {
          SumUp();
          write "Enter value for i (or 0 to stop): ";

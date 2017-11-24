@@ -4,7 +4,7 @@ namespace Tastier {
 
 public class Obj { // properties of declared symbol
    public string name; // its name
-   public int kind;    // var, proc or scope
+   public int kind;    // var, proc or scope, or constant
    public int type;    // its type if var (undef for proc)
    public int level;   // lexic level: 0 = global; >= 1 local
    public int adr;     // address (displacement) in scope
@@ -13,12 +13,13 @@ public class Obj { // properties of declared symbol
    public Obj outer;   // ptr to enclosing scope
    public Obj locals;  // ptr to locally declared objects
    public int nextAdr; // next free address in scope
+   public bool initialised = false;
 }
 
 public class SymbolTable {
 
    const int // object kinds
-      var = 0, proc = 1, scope = 2;
+      var = 0, proc = 1, scope = 2, constant = 3;
 
    const int // types
       undef = 0, integer = 1, boolean = 2;
@@ -43,6 +44,7 @@ public class SymbolTable {
       undefObj.next = null;
       this.parser = parser;
       mainPresent = false;
+      undefObj.initialised = true;
    }
 
 // open new scope and make it the current scope (topScope)
@@ -57,31 +59,54 @@ public class SymbolTable {
       curLevel++;
    }
 
+
 // close current scope
    public void CloseScope() {
-      Obj tmp = topScope.locals;
-      while(tmp != null) {
-         if(tmp.kind == 0) {
-            string lev;
-            if(tmp.level == 0) {
-               lev = "global";
-            }  else  {
-               lev = "local";
-            }
-            if(tmp.type == 0) {
-               Console.WriteLine(";  name: {0}, type: {1} undefined variable", tmp.name, lev);
-            }  else if(tmp.type == 1) {
-               Console.WriteLine(";  name: {0}, type: {1} integer variable", tmp.name, lev);
-            }  else  {
-               Console.WriteLine(";  name: {0}, type: {1} boolean variable,", tmp.name, lev);
-            }
-         }  else  {
-            Console.WriteLine(";  name: {0}, type: procedure", tmp.name, tmp.kind);
-         }
-         tmp = tmp.next;
+      Obj obj = topScope.locals;
+
+      int type;
+      int kind;
+      int ll;
+      string typeN;
+      string kindN;
+      string llN;
+
+      while ( obj != null) {
+        type = obj.type;
+        kind = obj.kind;
+        ll = obj.level;
+
+        if(type == 0){
+          typeN = "undef";
+        }else if(type == 1){
+          typeN = "integer";
+        }else{
+          typeN = "boolean";
+        }
+
+        if(kind == 0){
+          kindN = "var";
+        }else if(kind == 1){
+          kindN = "proc";
+        }else if(kind == 2){
+          kindN = "scope";
+        }else{
+          kindN = "constant";
+        }
+
+        if(ll == 0){
+          llN = "global";
+        }else{
+          llN = "local";
+        }
+
+        Console.WriteLine(";Name: {0}, Type: {1}, Kind: {2}, Level: {3}", obj.name, typeN, kindN, llN);
+
+        obj = obj.next;
       }
-      topScope = topScope.outer;
-      curLevel--;
+
+    topScope = topScope.outer;
+    curLevel--;
    }
 
 // open new sub-scope and make it the current scope (topScope)
