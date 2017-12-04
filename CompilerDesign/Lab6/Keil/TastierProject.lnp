@@ -1,0 +1,10 @@
+--cpu ARM7TDMI
+".\tastierproject.o"
+".\lpc2400.o"
+".\tastiersupport.o"
+".\serial.o"
+".\retarget.o"
+--library_type=microlib --strict --scatter ".\TastierProject.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\TastierProject.map" -o .\TastierProject.axf

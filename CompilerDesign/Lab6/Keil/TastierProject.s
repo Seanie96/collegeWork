@@ -26,191 +26,127 @@ main
 	LDR		R4, =globals
 	LDR 	BP, =stack		; address of stack base
 	LDR 	TOP, =stack+16	; address of top of stack frame
-	B		Main
-    LDR     R5, =10
+	B		MainBody
+MainBody
+    LDR     R5, =5
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; popop
-    LDR     R5, =120
+ STR R5, [R2] ; n
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; rqwewe
-    LDR     R5, =512
-    ADD     R2, BP, #16
-    LDR     R1, =0
-    ADD     R2, R2, R1, LSL #2
-    STR     R5, [R2]        ; limit
-; Procedure Subtract
-SubtractBody
+ LDR R5, [R2] ; n
+    LDR     R7, =4
+    CMP     R7, R5
+    MOVEQ   R7, #1
+    MOVNE   R7, #0
+    MOVS    R7, R7          ; reset Z flag in CPSR
+    BEQ     L2              ; jump on condition false
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- LDR R5, [R2] ; i
+ LDR R8, [R2] ; n
+    LDR     R9, =0
+    SUB     R8, R8, R9
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R8, [R2] ; n
+    B       L2
+L2
+    LDR     R6, =6
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L3              ; jump on condition false
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R7, [R2] ; n
+    LDR     R8, =2
+    SUB     R7, R7, R8
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R7, [R2] ; n
+    B       L3
+L3
+    LDR     R6, =7
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L4              ; jump on condition false
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R7, [R2] ; n
+    LDR     R8, =3
+    SUB     R7, R7, R8
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R7, [R2] ; n
+    B       L4
+L4
+    LDR     R6, =8
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L5              ; jump on condition false
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R7, [R2] ; n
+    LDR     R8, =4
+    SUB     R7, R7, R8
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R7, [R2] ; n
+    B       L5
+L5
+    LDR     R6, =9
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L6              ; jump on condition false
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R7, [R2] ; n
+    LDR     R8, =5
+    SUB     R7, R7, R8
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R7, [R2] ; n
+    B       L6
+L6
+    LDR     R6, =10
+    CMP     R6, R5
+    MOVEQ   R6, #1
+    MOVNE   R6, #0
+    MOVS    R6, R6          ; reset Z flag in CPSR
+    BEQ     L7              ; jump on condition false
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R7, [R2] ; n
+    LDR     R8, =6
+    SUB     R7, R7, R8
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ STR R7, [R2] ; n
+    B       L7
+L7
+ LDR R2, =0
+ ADD R2, R4, R2, LSL #2
+ LDR R5, [R2] ; n
     LDR     R6, =1
     SUB     R5, R5, R6
  LDR R2, =0
  ADD R2, R4, R2, LSL #2
- STR R5, [R2] ; i
-    MOV     TOP, BP         ; reset top of stack
-    LDR     BP, [TOP,#12]   ; and stack base pointers
-    LDR     PC, [TOP]       ; return from Subtract
-Subtract
-    LDR     R0, =2          ; current lexic level
-    LDR     R1, =0          ; number of local variables
-    BL      enter           ; build new stack frame
-    B       SubtractBody
-; Procedure Add
-AddBody
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- LDR R5, [R2] ; i
-    LDR     R6, =0
-    CMP     R5, R6
-    MOVGT   R5, #1
-    MOVLE   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L1              ; jump on condition false
-    MOV     R2, BP          ; load current base pointer
-    LDR     R2, [R2,#8]
-    ADD     R2, R2, #16
-    LDR     R1, =1
-    ADD     R2, R2, R1, LSL #2
-    LDR     R5, [R2]        ; sum
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- LDR R6, [R2] ; i
-    ADD     R5, R5, R6
-    MOV     R2, BP          ; load current base pointer
-    LDR     R2, [R2,#8]
-    ADD     R2, R2, #16
-    LDR     R1, =1
-    ADD     R2, R2, R1, LSL #2
-    STR     R5, [R2]        ; sum
-    ADD     R0, PC, #4      ; store return address
-    STR     R0, [TOP]       ; in new stack frame
-    B       Subtract
-    ADD     R0, PC, #4      ; store return address
-    STR     R0, [TOP]       ; in new stack frame
-    B       Add
-    B       L2
+ STR R5, [R2] ; n
 L1
-L2
-    MOV     TOP, BP         ; reset top of stack
-    LDR     BP, [TOP,#12]   ; and stack base pointers
-    LDR     PC, [TOP]       ; return from Add
-Add
-    LDR     R0, =2          ; current lexic level
-    LDR     R1, =0          ; number of local variables
-    BL      enter           ; build new stack frame
-    B       AddBody
-; Procedure SumUp
-SumUpBody
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- LDR R5, [R2] ; i
-    ADD     R2, BP, #16
-    LDR     R1, =0
-    ADD     R2, R2, R1, LSL #2
-    STR     R5, [R2]        ; j
-    LDR     R5, =0
-    ADD     R2, BP, #16
-    LDR     R1, =1
-    ADD     R2, R2, R1, LSL #2
-    STR     R5, [R2]        ; sum
-    ADD     R0, PC, #4      ; store return address
-    STR     R0, [TOP]       ; in new stack frame
-    B       Add
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L3
-    DCB     "The sum of the values from 1 to ", 0
-    ALIGN
-L3
-    ADD     R2, BP, #16
-    LDR     R1, =0
-    ADD     R2, R2, R1, LSL #2
-    LDR     R5, [R2]        ; j
-    MOV     R0, R5
-    BL      TastierPrintInt
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L4
-    DCB     " is ", 0
-    ALIGN
-L4
-    ADD     R2, BP, #16
-    LDR     R1, =1
-    ADD     R2, R2, R1, LSL #2
-    LDR     R5, [R2]        ; sum
-    MOV     R0, R5
-    BL      TastierPrintIntLf
-    MOV     TOP, BP         ; reset top of stack
-    LDR     BP, [TOP,#12]   ; and stack base pointers
-    LDR     PC, [TOP]       ; return from SumUp
-SumUp
-    LDR     R0, =1          ; current lexic level
-    LDR     R1, =2          ; number of local variables
-    BL      enter           ; build new stack frame
-    B       SumUpBody
-;Name: limit, Type: integer, Kind: constant, Level: local, Init: True
-;Name: j, Type: integer, Kind: var, Level: local, Init: False
-;Name: sum, Type: integer, Kind: var, Level: local, Init: False
-;Name: Subtract, Type: undef, Kind: proc, Level: local, Init: False
-;Name: Add, Type: undef, Kind: proc, Level: local, Init: False
-    LDR     R5, =12
-    ADD     R2, BP, #16
-    LDR     R1, =0
-    ADD     R2, R2, R1, LSL #2
-    STR     R5, [R2]        ; wewewe
-MainBody
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L5
-    DCB     "Enter value for i (or 0 to stop): ", 0
-    ALIGN
-L5
-    BL      TastierReadInt
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R0, [R2] ; i
-L6
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- LDR R5, [R2] ; i
-    LDR     R6, =0
-    CMP     R5, R6
-    MOVGT   R5, #1
-    MOVLE   R5, #0
-    MOVS    R5, R5          ; reset Z flag in CPSR
-    BEQ     L7              ; jump on condition false
-    ADD     R0, PC, #4      ; store return address
-    STR     R0, [TOP]       ; in new stack frame
-    B       SumUp
-    ADD     R0, PC, #4      ; string address
-    BL      TastierPrintString
-    B       L8
-    DCB     "Enter value for i (or 0 to stop): ", 0
-    ALIGN
-L8
-    BL      TastierReadInt
- LDR R2, =0
- ADD R2, R4, R2, LSL #2
- STR R0, [R2] ; i
-    B       L6
-L7
-StopTest
-    B       StopTest
+StopSwitchSatetementTest
+    B       StopSwitchSatetementTest
 Main
     LDR     R0, =1          ; current lexic level
     LDR     R1, =0          ; number of local variables
     BL      enter           ; build new stack frame
     B       MainBody
-;Name: wewewe, Type: integer, Kind: constant, Level: local, Init: True
-;Name: i, Type: integer, Kind: var, Level: global, Init: False
-;Name: popop, Type: integer, Kind: constant, Level: global, Init: True
-;Name: weqwe, Type: integer, Kind: constant, Level: global, Init: False
-;Name: rqwewe, Type: integer, Kind: constant, Level: global, Init: True
-;Name: SumUp, Type: undef, Kind: proc, Level: global, Init: False
-;Name: main, Type: undef, Kind: proc, Level: global, Init: False
 
 ; Subroutine enter
 ; Construct stack frame for procedure
