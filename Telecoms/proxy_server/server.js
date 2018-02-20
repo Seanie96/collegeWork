@@ -13,37 +13,42 @@ var stdin = process.openStdin();
 var blocked_sites = [];
 var cache = new hashmap();
 
+// Listener for the console, so that the desired websites to be
+// blocked can be gotten.
 stdin.addListener("data", function(d) {
     console.log("______ URL blocked: [" + d.toString().trim() + "] ______");
     blocked_sites.push(d.toString().trim());
 });
 
+// Method to print out the date and time of initialisation of the server, as well
+// as the Host and Port that it's listening on.
 function log_listener() {
-    console.log("____________ proxy server is running on port: " + port + ", at " + host + " ____________");
+    console.log("____________ " + (new Date()) + " <--> proxy server is running on port: " + port + ", at " + host + " ____________");
 }
 
+// Server initialisation, as well as attachment of listeners/handler.
 var server = http.createServer(requestHandler).listen(port, host, log_listener);
 server.addListener('connect', httpsRequestHandler);
 
-function isInArray(value, array) {
-    return array.indexOf(value) > -1;
-}
-
+// HTTP handler
 function requestHandler(client_req, client_res) {
-    // check cache for url..
+    // initalise timer.
     marky.mark("HTTP Request");
+    // get hash key of URL.
     var hash_key = crypto.createHash('sha1').update(client_req.url).digest('binary');
     var request_url = url.parse(client_req.url, true);
     var site_name = request_url.host.toString().trim();
 
+    // Checking if URL is blocked
     if(isInArray(site_name, blocked_sites)) {
         console.log("______ blocked site : '" + site_name + "' was attempted to be accessed.");
         client_res.write("HTTP/" + client_req.httpVersion + " 403 Forbidden\r\n\r\n");
         client_res.end();
     }   else    {
+        // If URL is not blocked, then check the cache for it.
         if(cache.has(hash_key)) {
-            // cache has the hashed url key...
-
+            // Write the data corressponding to the cached URL to the
+            // client_res variable which is sent to back to the client.
             var url_data = cache.get(hash_key);
             var chunked_data = JSON.stringify(url_data.data);
             client_res.writeHead(url_data.status, url_data.header);
@@ -51,6 +56,9 @@ function requestHandler(client_req, client_res) {
             cache.set(hash_key, url_data);
             client_res.write(buffered_data);
             client_res.end();
+
+            // Stop the timer, and print to the management console the time
+            // taken for the request to be fullfilled.
             marky.stop("HTTP Request");
             var times = marky.getEntries();
             var time = times[0].duration;
@@ -161,4 +169,9 @@ function httpsRequestHandler(client_req, client_socket_conn, client_res) {
             });
         }
     }
+}
+
+// Utility functions
+function isInArray(value, array) {
+    return array.indexOf(value) > -1;
 }
