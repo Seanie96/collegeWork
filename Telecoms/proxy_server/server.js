@@ -116,33 +116,47 @@ function requestHandler(client_req, client_res) {
     }
 }
 
+// HTTPS Handler
 function httpsRequestHandler(client_req, client_socket_conn, client_res) {
     var site_name = client_req.url.split(':')[0];
     var hash_key = crypto.createHash('sha1').update(site_name).digest('binary');
 
+    // Checking if URL is blocked
     if(isInArray(site_name, blocked_sites)) {
         console.log("______ blocked site : '" + site_name + "' was attempted to be accessed.");
+        // Send a 403, forbidden, status code.
         client_socket_conn.write("HTTP/" + client_req.httpVersion + " 403 Forbidden\r\n\r\n");
         client_socket_conn.end();
         return;
     } else  {
+        // Checks to see if the URLs data has been cached
         if(cache.has(hash_key)) {
-            // cache has the hashed url key...
-
+            // Print to the management console that the cache is being used to deliver
+            // the data corresponding to the requested URL/Host.
             console.log('cache_S --> ' + client_req.url.split(':')[0]);
             var url_data = cache.get(hash_key);
             client_socket_conn.write(url_data.data);
             client_socket_conn.end();
             return;
         } else {
+            // variable which will store the data to be cached.
             var data_to_cache = [];
+
+            // print to the management console that the URL is going to be requested..
+            // ie. the cache does not contain it.
             console.log("serve_S --> " + site_name);
 
+            // create a new socket connection between the proxy and the desired host
+            // of the browser
             var server_socket_conn = net.connect(client_req.url.split(':')[1], client_req.url.split(':')[0], () => {
+                // Write the contents of the client_res to the socket connection between
+                // the proxy and the desired host.
                 server_socket_conn.write(client_res);
+                // Confirm the socket connection between the proxy and the browser.
                 client_socket_conn.write("HTTP/" + client_req.httpVersion + " 200 Connection established\r\n\r\n");
             });
 
+            // The following are 4 socket handlers. 1 data and error socket handler for each socket.
             server_socket_conn.on('data', function(message) {
                 data_to_cache.push(message);
                 client_socket_conn.write(message);
